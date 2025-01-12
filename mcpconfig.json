@@ -1,0 +1,47 @@
+{
+  "version": "1.0",
+  "resourceTypes": {
+    "jira.issue": {
+      "mimeType": "application/vnd.jira.issue+json",
+      "attributes": [
+        "summary",
+        "description",
+        "status",
+        "priority",
+        "assignee",
+        "reporter"
+      ],
+      "relationships": [
+        "blockedBy",
+        "relatesTo",
+        "duplicates"
+      ],
+      "template": {
+        "type": "issue",
+        "fields": {
+          "project": { "required": true },
+          "summary": { "required": true },
+          "issuetype": { "required": true }
+        }
+      }
+    },
+    "jira.project": {
+      "mimeType": "application/vnd.jira.project+json",
+      "attributes": [
+        "key",
+        "name",
+        "description",
+        "lead",
+        "url"
+      ],
+      "template": {
+        "type": "project",
+        "fields": {
+          "key": { "required": true },
+          "name": { "required": true },
+          "projectTypeKey": { "required": true }
+        }
+      }
+    }
+  }
+}

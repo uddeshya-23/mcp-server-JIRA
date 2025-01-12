@@ -1,0 +1,135 @@
+openapi: 3.0.0
+info:
+  title: Jira MCP Server
+  version: 1.0.0
+  description: Model Context Protocol server for Jira integration
+servers:
+  - url: http://localhost:3000
+    description: Local development server
+
+paths:
+  /health:
+    get:
+      summary: Health check endpoint
+      responses:
+        '200':
+          description: Server is healthy
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: healthy
+
+  /api/v1/issues/{issueKey}:
+    get:
+      summary: Get issue details
+      parameters:
+        - name: issueKey
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Issue details retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Issue'
+        '404':
+          description: Issue not found
+          
+  /api/v1/sprint/current:
+    get:
+      summary: Get current sprint details
+      responses:
+        '200':
+          description: Current sprint details retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Sprint'
+
+  /api/v1/analytics/workload:
+    get:
+      summary: Get assignee workload analytics
+      responses:
+        '200':
+          description: Workload analytics retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  assignees:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/AssigneeWorkload'
+
+components:
+  schemas:
+    Issue:
+      type: object
+      properties:
+        key:
+          type: string
+        summary:
+          type: string
+        description:
+          type: string
+        status:
+          type: string
+        assignee:
+          type: string
+        timeSpent:
+          type: number
+        comments:
+          type: array
+          items:
+            $ref: '#/components/schemas/Comment'
+
+    Sprint:
+      type: object
+      properties:
+        id:
+          type: number
+        name:
+          type: string
+        startDate:
+          type: string
+          format: date-time
+        endDate:
+          type: string
+          format: date-time
+        issues:
+          type: array
+          items:
+            $ref: '#/components/schemas/Issue'
+
+    Comment:
+      type: object
+      properties:
+        id:
+          type: string
+        body:
+          type: string
+        author:
+          type: string
+        created:
+          type: string
+          format: date-time
+
+    AssigneeWorkload:
+      type: object
+      properties:
+        name:
+          type: string
+        totalIssues:
+          type: number
+        issuesByType:
+          type: object
+          additionalProperties:
+            type: number
